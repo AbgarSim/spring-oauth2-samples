@@ -1,0 +1,23 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: spring-oauth2-jwt-client
+  security:
+    oauth2:
+      client:
+        registration:
+          oauth2client:
+            client-id: sample-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,read,profile
+            authorization-uri: http://127.0.0.1:9001/login
+            token-uri: http://127.0.0.1:9001/oauth2/token
+            client-name: OAuth2 Client
+        provider:
+          oauth2client:
+            authorization-uri: http://127.0.0.1:9001/login
+            token-uri: http://127.0.0.1:9001/oauth2/token

@@ -1,0 +1,19 @@
+server:
+  port: 8443
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  application:
+    name: spring-oauth2-jwt-resource-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:9001/oauth2/jwks
