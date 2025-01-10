@@ -30,12 +30,14 @@
 	<string>Main</string>
 	<key>CFBundleURLTypes</key>
     <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.example.app</string>
-        </array>
-      </dict>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.sample.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.sample.app</string>
+            </array>
+        </dict>
     </array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

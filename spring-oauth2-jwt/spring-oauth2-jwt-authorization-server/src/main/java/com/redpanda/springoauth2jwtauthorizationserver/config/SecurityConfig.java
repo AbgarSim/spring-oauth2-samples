@@ -129,15 +129,21 @@ public class SecurityConfig {
     RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("sample-client")
         .clientSecret("{noop}secret")
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .redirectUri("http://localhost:8083/callback.html")
+        .redirectUri("com.sample.app://callback")
         .postLogoutRedirectUri("http://localhost:8083/")
         .scope(OidcScopes.OPENID)
         .scope("read")
         .scope(OidcScopes.PROFILE)
-        .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+        .clientSettings(
+            ClientSettings.builder()
+                .requireProofKey(true)
+                .requireAuthorizationConsent(true)
+                .build()
+        )
         .build();
 
     return new InMemoryRegisteredClientRepository(oidcClient);
