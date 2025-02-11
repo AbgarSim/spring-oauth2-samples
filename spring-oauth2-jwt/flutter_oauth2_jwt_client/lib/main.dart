@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:universal_html/html.dart' as html;
 
-import 'package:flutter_oauth2_jwt_client/auth/auth_service.dart';
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -17,27 +15,26 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String? _accessToken;
-  final _authService = AuthService.instance;
 
   @override
   void initState() {
     super.initState();
 
-    if (kIsWeb) {
-      if (html.window.localStorage.containsKey("oauth_code")) {
-        _authService.handleAuthorizationResponse().then((_) {
-          setState(() {
-            _accessToken = _authService.accessToken;
-          });
-        }).catchError((err) {
-          print('Error during web callback handle: $err');
-        });
-      }
-    }
+    // if (kIsWeb) {
+    //   if (html.window.localStorage.containsKey("oauth_code")) {
+    //     _authService.handleAuthorizationResponse().then((_) {
+    //       setState(() {
+    //         _accessToken = _authService.accessToken;
+    //       });
+    //     }).catchError((err) {
+    //       print('Error during web callback handle: $err');
+    //     });
+    //   }
+    // }
   }
 
   Future<void> _login() async {
-    await _authService.authorizationCodeGrantFlow();
+    //await _authService.authorizationCodeGrantFlow();
 
   }
 
@@ -59,14 +56,13 @@ class _MyAppState extends State<MyApp> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('Access Token: $_accessToken'),
-// e.g. Button to call a protected resource
                     ElevatedButton(
                       child: Text('Fetch Protected Data'),
                       onPressed: () async {
                         try {
-                          final data =
-                              await _authService.fetchSomeProtectedResource();
-                          print(data);
+                          // final data =
+                          //     await _authService.fetchSomeProtectedResource();
+                          //print(data);
                         } catch (e) {
                           print('Error fetching resource: $e');
                         }
