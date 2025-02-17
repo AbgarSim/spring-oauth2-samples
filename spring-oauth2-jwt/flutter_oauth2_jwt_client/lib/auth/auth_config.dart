@@ -25,6 +25,14 @@ class AuthConfig {
     }
   }
 
+  static String issuer() {
+    return "http://${hostIp()}:9001";
+  }
+
+  static String discoveryUrl() {
+    return "http://${hostIp()}:9001/.well-known/openid-configuration";
+  }
+
   static String authorizationEndpoint() {
     return "http://${hostIp()}:9001/oauth2/authorize";
   }

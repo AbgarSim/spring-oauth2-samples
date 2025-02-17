@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:universal_html/html.dart' as html;
 
+import 'auth/auth_client.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -19,26 +21,32 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    // if (kIsWeb) {
-    //   if (html.window.localStorage.containsKey("oauth_code")) {
-    //     _authService.handleAuthorizationResponse().then((_) {
-    //       setState(() {
-    //         _accessToken = _authService.accessToken;
-    //       });
-    //     }).catchError((err) {
-    //       print('Error during web callback handle: $err');
-    //     });
-    //   }
-    // }
+    if (kIsWeb && html.window.localStorage.containsKey("oauth_code")) {
+      final code = html.window.localStorage["oauth_code"];
+      AuthClient.instance.processAuthResponse(code).then((_) {
+        setState(() {
+          _accessToken = AuthClient.instance.accessToken;
+        });
+      });
+    }else if(!kIsWeb) {
+      AppLinks().uriLinkStream.listen((Uri? uri) {
+        if (uri != null && uri.scheme == "com.sample.app" && uri.host == "callback") {
+          String? code = uri.queryParameters['code'];
+          if (code != null) {
+            AuthClient.instance.processAuthResponse(code).then((_) {
+              setState(() {
+                _accessToken = AuthClient.instance.accessToken;
+              });
+            });
+          }
+        }
+      });
+    }
   }
 
   Future<void> _login() async {
-    //await _authService.authorizationCodeGrantFlow();
-
+    await AuthClient.instance.login();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +68,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text('Fetch Protected Data'),
                       onPressed: () async {
                         try {
-                          // final data =
-                          //     await _authService.fetchSomeProtectedResource();
-                          //print(data);
+                          // Fetch protected resource
                         } catch (e) {
                           print('Error fetching resource: $e');
                         }
