@@ -22,22 +22,22 @@ class PkcePair {
   /// Otherwise generates a new one, and if on web, stores it in localStorage.
   static PkcePair loadOrGenerate() {
     if (kIsWeb) {
-// 1) Attempt to load from localStorage
+      // 1) Attempt to load from localStorage
       final storedVerifier = html.window.localStorage['pkce_code_verifier'];
       final storedChallenge = html.window.localStorage['pkce_code_challenge'];
 
       if (storedVerifier != null && storedChallenge != null) {
-// Found an existing PKCE, return it
+        // Found an existing PKCE, return it
         return PkcePair._(storedVerifier, storedChallenge);
       }
     }
 
-// 2) Nothing found on web or not running on web => Generate new
+    // 2) Nothing found on web or not running on web => Generate new
     final newVerifier = _generateRandomString(64);
     final hashBytes = sha256.convert(utf8.encode(newVerifier)).bytes;
     final newChallenge = _base64UrlEncodeNoPadding(hashBytes);
 
-// 3) If web, store them in localStorage so they survive a reload
+    // 3) If web, store them in localStorage so they survive a reload
     if (kIsWeb) {
       html.window.localStorage['pkce_code_verifier'] = newVerifier;
       html.window.localStorage['pkce_code_challenge'] = newChallenge;
@@ -54,8 +54,6 @@ class PkcePair {
     }
   }
 
-// --- Helpers ---
-
   /// Generates a random alphanumeric string of length [len].
   static String _generateRandomString(int len) {
     const chars =
@@ -67,7 +65,6 @@ class PkcePair {
   /// Base64 URL-safe encode without padding
   static String _base64UrlEncodeNoPadding(List<int> bytes) {
     final base64String = base64Url.encode(bytes);
-// Strip trailing '='
     return base64String.replaceAll('=', '');
   }
 }

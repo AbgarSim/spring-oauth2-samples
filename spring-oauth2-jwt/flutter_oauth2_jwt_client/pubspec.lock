@@ -82,7 +82,7 @@ packages:
     source: hosted
     version: "1.19.0"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
@@ -168,14 +168,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.5"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.2"
   http_parser:
     dependency: transitive
     description:
@@ -232,14 +224,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
-  oauth2:
-    dependency: "direct main"
-    description:
-      name: oauth2
-      sha256: c84470642cbb2bec450ccab2f8520c079cd1ca546a76ffd5c40589e07f4e8bf4
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.3"
   path:
     dependency: transitive
     description:
