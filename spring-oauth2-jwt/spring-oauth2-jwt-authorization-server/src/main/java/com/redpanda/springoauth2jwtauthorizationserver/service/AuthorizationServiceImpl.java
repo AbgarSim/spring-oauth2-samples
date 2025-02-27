@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.service;
+package com.redpanda.springoauth2jwtauthorizationserver.service;
 
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.model.AuthorizationEntity;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.repository.AuthorizationEntityRepository;
@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class AuthorizationServiceImpl implements OAuth2AuthorizationService {
 

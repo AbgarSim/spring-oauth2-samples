@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.service;
+package com.redpanda.springoauth2jwtauthorizationserver.service;
 
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.repository.RegisteredClientEntityRepository;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.converter.RegisteredClientMapper;
@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class RegisteredClientRepositoryImpl implements RegisteredClientRepository {
 

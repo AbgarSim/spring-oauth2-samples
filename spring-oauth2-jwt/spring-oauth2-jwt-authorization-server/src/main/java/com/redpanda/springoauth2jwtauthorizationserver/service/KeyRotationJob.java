@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.service;
+package com.redpanda.springoauth2jwtauthorizationserver.service;
 
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.model.RsaKey;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.repository.RsaKeyRepository;

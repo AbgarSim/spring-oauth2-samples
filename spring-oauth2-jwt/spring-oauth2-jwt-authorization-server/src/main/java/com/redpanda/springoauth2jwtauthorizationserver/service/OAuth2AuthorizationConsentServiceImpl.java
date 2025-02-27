@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.service;
+package com.redpanda.springoauth2jwtauthorizationserver.service;
 
 
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.repository.AuthorizationConsentEntityRepository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class OAuth2AuthorizationConsentServiceImpl implements OAuth2AuthorizationConsentService {
 

@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure.security.service;
+package com.redpanda.springoauth2jwtauthorizationserver.service;
 
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.model.UserEntity;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.jpa.repository.UserEntityRepository;
@@ -13,7 +13,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsManager, UserDetailsPasswordService {
 
@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsManager, UserDetailsPa
     }
     UserEntity updatedUser = userDetailsConverter.fromDomainToEntity((CustomUserDetails) userDetails);
     updatedUser.setId(existingUser.getId());
-    updatedUser.setPassword(existingUser.getPassword()); // Keep old password if not updated
+    updatedUser.setPassword(existingUser.getPassword());
     userEntityRepository.save(updatedUser);
   }
 

@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 
 @Mapper(componentModel = "spring")
 public interface RegisteredClientMapper {
@@ -20,6 +21,9 @@ public interface RegisteredClientMapper {
     return RegisteredClient.withId(entity.getId())
         .clientId(entity.getClientId())
         .clientSecret(entity.getClientSecret())
+        .clientSettings(ClientSettings.builder()
+            .requireAuthorizationConsent(false)
+            .build())
         .authorizationGrantTypes(grantTypes ->
             entity.getGrantTypes().forEach(type -> grantTypes.add(new AuthorizationGrantType(type))))
         .clientAuthenticationMethods(authMethods ->
