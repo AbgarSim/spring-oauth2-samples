@@ -8,7 +8,12 @@ logging:
 spring:
   application:
     name: spring-oauth2-jwt-authorization-server
-  security:
-    user:
-      name: user
-      password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/oauth2_db  # Change to match your database
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
