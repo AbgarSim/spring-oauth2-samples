@@ -5,9 +5,10 @@ import com.redpanda.springoauth2jwtauthorizationserver.service.converter.Oauth2A
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class JpaOAuth2AuthorizationConsentService implements OAuth2AuthorizationConsentService {
   private final AuthorizationConsentRepository authorizationConsentRepository;

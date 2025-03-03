@@ -117,24 +117,8 @@ public class RegisteredClientConverter
 
   private Map<String, Object> parseMap(String data) {
     try {
-      Map<String, Object> parsedMap = this.objectMapper.readValue(data, new TypeReference<>() {
+      return this.objectMapper.readValue(data, new TypeReference<>() {
       });
-      return parsedMap.entrySet().stream().
-          map(e -> {
-            if (e.getKey().contains("time-to")) {
-              e.setValue(Duration.of(((Double) e.getValue()).longValue(), ChronoUnit.SECONDS));
-            } else if (e.getKey().contains("token-format")) {
-              String value = String.valueOf(((Map<String, String>) e.getValue()).get("value"));
-              if (value.equals(OAuth2TokenFormat.SELF_CONTAINED.getValue())) {
-                e.setValue(OAuth2TokenFormat.SELF_CONTAINED);
-              } else if (value.equals(OAuth2TokenFormat.REFERENCE.getValue())) {
-                e.setValue(OAuth2TokenFormat.REFERENCE);
-              } else {
-                e.setValue(e.getValue());
-              }
-            }
-            return e;
-          }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     } catch (Exception ex) {
       throw new IllegalArgumentException(ex.getMessage(), ex);
     }

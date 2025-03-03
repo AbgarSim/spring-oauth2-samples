@@ -1,4 +1,4 @@
-package com.redpanda.springoauth2jwtauthorizationserver.infrastructure;
+package com.redpanda.springoauth2jwtauthorizationserver.security;
 
 import java.util.Collection;
 import java.util.Set;

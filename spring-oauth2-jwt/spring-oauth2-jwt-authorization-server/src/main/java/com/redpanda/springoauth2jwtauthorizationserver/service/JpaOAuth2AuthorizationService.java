@@ -10,9 +10,10 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {
   private final AuthorizationRepository authorizationRepository;

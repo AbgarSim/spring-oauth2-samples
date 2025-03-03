@@ -1,6 +1,6 @@
 package com.redpanda.springoauth2jwtauthorizationserver.service;
 
-import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.CustomUserDetails;
+import com.redpanda.springoauth2jwtauthorizationserver.security.CustomUserDetails;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.model.UserEntity;
 import com.redpanda.springoauth2jwtauthorizationserver.infrastructure.repository.UserEntityRepository;
 import com.redpanda.springoauth2jwtauthorizationserver.service.converter.UserDetailsConverter;
