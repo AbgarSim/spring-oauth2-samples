@@ -1,20 +1,7 @@
 package com.redpanda.springoauth2jwtauthorizationserver.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.redpanda.springoauth2jwtauthorizationserver.security.CustomUserDetails;
-import com.redpanda.springoauth2jwtauthorizationserver.security.CustomUserPrincipalMixin;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.List;
-import java.util.UUID;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,57 +11,28 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-  private static KeyPair generateRsaKey() {
-    KeyPair keyPair;
-    try {
-      KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-      keyPairGenerator.initialize(2048);
-      keyPair = keyPairGenerator.generateKeyPair();
-    } catch (Exception ex) {
-      throw new IllegalStateException(ex);
-    }
-    return keyPair;
-  }
-
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    // Set the allowed origins. In production, specify your front-end domain(s).
-    configuration.setAllowedOrigins(List.of("http://localhost:8083", "https://my-frontend.com"));
-    // You can allow all origins for development, but be careful in production:
-    // configuration.setAllowedOriginPatterns(List.of("*"));
-
-    // Allowed HTTP methods (POST, GET, etc.)
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-    // Allowed headers
-    configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-
-    // If you need credentials (cookies, tokens) to be included
-    configuration.setAllowCredentials(true);
-
-    // Apply this configuration to any endpoint path
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
+  private static final String[] WHITELISTED_PATHS = new String[]{
+      "/login",
+      "/register",
+      "/verify-email",
+      "/error",
+      "/css/**",
+      "/img/**"
+  };
+  private static final String CONSENT_PATH = "/oauth2/consent";
+  private static final String LOGIN_PATH = "/login";
 
   @Bean
   @Order(1)
@@ -87,20 +45,16 @@ public class SecurityConfig {
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
-                .authorizationEndpoint(endpoint -> endpoint
-                    .consentPage("/oauth2/consent")
-                )
-                .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
+                .authorizationEndpoint(endpoint -> endpoint.consentPage(CONSENT_PATH))
+                .oidc(Customizer.withDefaults())
         )
         .authorizeHttpRequests((authorize) ->
             authorize
                 .anyRequest().authenticated()
         )
-        // Redirect to the login page when not authenticated from the
-        // authorization endpoint
         .exceptionHandling((exceptions) -> exceptions
             .defaultAuthenticationEntryPointFor(
-                new LoginUrlAuthenticationEntryPoint("/login"),
+                new LoginUrlAuthenticationEntryPoint(LOGIN_PATH),
                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
             )
         );
@@ -114,15 +68,10 @@ public class SecurityConfig {
     http
         .csrf(Customizer.withDefaults())
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(
-                "/login", "/register","/verify-email","/error",
-                "/css/**", "/js/**", "/img/**"
-            ).permitAll()
+            .requestMatchers(WHITELISTED_PATHS).permitAll()
             .anyRequest().authenticated()
         )
-        .formLogin(form -> form
-            .loginPage("/login")
-        );
+        .formLogin(form -> form.loginPage(LOGIN_PATH));
 
     return http.build();
   }
@@ -132,32 +81,11 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  @Bean
-  public JWKSource<SecurityContext> jwkSource() {
-    KeyPair keyPair = generateRsaKey();
-    RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-    RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-    RSAKey rsaKey = new RSAKey.Builder(publicKey)
-        .privateKey(privateKey)
-        .keyID(UUID.randomUUID().toString())
-        .build();
-    JWKSet jwkSet = new JWKSet(rsaKey);
-    return new ImmutableJWKSet<>(jwkSet);
-  }
+
 
   @Bean
   public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
     return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-  }
-
-  @Bean
-  public ObjectMapper objectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new JavaTimeModule());
-    objectMapper.registerModules(SecurityJackson2Modules.getModules(this.getClass().getClassLoader()));
-    objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
-    objectMapper.addMixIn(CustomUserDetails.class, CustomUserPrincipalMixin.class);
-    return objectMapper;
   }
 
   @Bean
