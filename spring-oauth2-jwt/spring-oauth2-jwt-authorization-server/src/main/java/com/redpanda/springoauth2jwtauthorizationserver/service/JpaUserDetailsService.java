@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class JpaUserDetailsService implements UserDetailsManager, UserDetailsPasswordService {
-
   private final UserEntityRepository userEntityRepository;
   private final UserDetailsConverter userDetailsConverter;
   private final PasswordEncoder passwordEncoder;

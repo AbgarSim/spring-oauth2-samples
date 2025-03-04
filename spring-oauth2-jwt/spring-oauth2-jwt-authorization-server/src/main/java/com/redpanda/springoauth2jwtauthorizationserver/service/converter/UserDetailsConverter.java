@@ -14,6 +14,7 @@ public class UserDetailsConverter
   public CustomUserDetails toDomain(UserEntity entity) {
 
     return CustomUserDetails.builder()
+        .id(entity.getId())
         .username(entity.getUsername())
         .password(entity.getPassword())
         .enabled(entity.isEnabled())
@@ -24,6 +25,7 @@ public class UserDetailsConverter
   @Override
   public UserEntity toEntity(CustomUserDetails domain) {
     return UserEntity.builder()
+        .id(domain.getId())
         .username(domain.getUsername())
         .password(domain.getPassword())
         .enabled(domain.isEnabled())

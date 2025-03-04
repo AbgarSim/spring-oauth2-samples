@@ -3,13 +3,15 @@ package com.redpanda.springoauth2jwtauthorizationserver.security;
 import java.util.Collection;
 import java.util.Set;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Getter
 @Builder
 public class CustomUserDetails implements UserDetails {
 
-  private final String id;
+  private final Long id;
   private final String username;
   private final String password;
   private final boolean enabled;

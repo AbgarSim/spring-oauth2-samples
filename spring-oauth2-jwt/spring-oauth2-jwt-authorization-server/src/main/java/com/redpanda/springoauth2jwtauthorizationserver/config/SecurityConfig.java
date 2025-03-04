@@ -112,9 +112,10 @@ public class SecurityConfig {
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http
+        .csrf(Customizer.withDefaults())
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(
-                "/login", "/error",
+                "/login", "/register","/verify-email","/error",
                 "/css/**", "/js/**", "/img/**"
             ).permitAll()
             .anyRequest().authenticated()

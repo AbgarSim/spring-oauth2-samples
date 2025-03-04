@@ -1,6 +1,5 @@
 package com.redpanda.springoauth2jwtauthorizationserver.security;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -20,7 +19,7 @@ public class CustomUserPrincipalDeserializer extends JsonDeserializer<CustomUser
     JsonNode jsonNode = mapper.readTree(jsonParser);
 
     return CustomUserDetails.builder()
-        .id(readJsonNode(jsonNode, "id").asText())
+        .id(readJsonNode(jsonNode, "id").asLong())
         .enabled(readJsonNode(jsonNode, "enable").asBoolean())
         .username(readJsonNode(jsonNode, "username").asText())
         .password(readJsonNode(jsonNode, "password").asText())
