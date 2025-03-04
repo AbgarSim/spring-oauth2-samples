@@ -84,11 +84,12 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfigurer.authorizationServer();
 
     http
-        .cors(Customizer.withDefaults())
-        .csrf().disable()
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
+                .authorizationEndpoint(endpoint -> endpoint
+                    .consentPage("/oauth2/consent")
+                )
                 .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
         )
         .authorizeHttpRequests((authorize) ->
@@ -109,15 +110,18 @@ public class SecurityConfig {
 
   @Bean
   @Order(2)
-  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-      throws Exception {
+  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests((authorize) -> authorize
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(
+                "/login", "/error",
+                "/css/**", "/js/**", "/img/**"
+            ).permitAll()
             .anyRequest().authenticated()
         )
-        // Form login handles the redirect to the login page from the
-        // authorization server filter chain
-        .formLogin(Customizer.withDefaults());
+        .formLogin(form -> form
+            .loginPage("/login")
+        );
 
     return http.build();
   }
