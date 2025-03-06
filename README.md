@@ -4,9 +4,9 @@
 
 ## TODO
 
-### Simple JWT
 
-- Authorization Server default
-- Resource server default
-- Spring Thymeleaf Client authorization code grant
-
+- customize and stylize html forms
+- Add validations for registration form
+- fix Web client CORS error
+- Test coverage
+- documentation 
