@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 class AuthConfig {
@@ -20,8 +22,12 @@ class AuthConfig {
   static String hostIp() {
     if(kIsWeb) {
       return "127.0.0.1";
-    }else {
+    }else if(Platform.isAndroid){
       return "10.0.2.2";
+    }else if(Platform.isIOS){
+      return "192.168.100.40";
+    }else {
+      return "127.0.0.1";
     }
   }
 

@@ -2,6 +2,7 @@ package com.redpanda.springoauth2jwtauthorizationserver.config;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,10 +19,21 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  private final String[] WHITELISTED_CORS_ORIGINS = new String[] {
+      "http://localhost:8083"
+  };
+
+
+  private final String[] WHITELISTED_CORS_METHODS = new String[] {
+      "GET", "POST", "PUT", "DELETE", "OPTIONS"
+  };
 
   private static final String[] WHITELISTED_PATHS = new String[]{
       "/login",
@@ -35,6 +47,19 @@ public class SecurityConfig {
   private static final String LOGIN_PATH = "/login";
 
   @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList(WHITELISTED_CORS_ORIGINS));
+    configuration.setAllowedMethods(Arrays.asList(WHITELISTED_CORS_METHODS));
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
+  @Bean
   @Order(1)
   public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
       throws Exception {
@@ -43,6 +68,7 @@ public class SecurityConfig {
 
     http
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+        .cors(Customizer.withDefaults())
         .with(authorizationServerConfigurer, (authorizationServer) ->
             authorizationServer
                 .authorizationEndpoint(endpoint -> endpoint.consentPage(CONSENT_PATH))
@@ -66,7 +92,7 @@ public class SecurityConfig {
   @Order(2)
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http
-        .csrf(Customizer.withDefaults())
+        .csrf(Customizer.withDefaults()).cors(Customizer.withDefaults())
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(WHITELISTED_PATHS).permitAll()
             .anyRequest().authenticated()
